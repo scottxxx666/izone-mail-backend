@@ -65,7 +65,7 @@ async function getIzoneMembers() {
     return data.Items;
 }
 
-async function test() {
+exports.handler = async function () {
     const users = await getAllUsers();
     const members = await getIzoneMembers();
     for (let i in members) {
