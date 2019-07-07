@@ -28,23 +28,6 @@ async function searchContains(uid, containerId, lastId, keyword) {
     }
 }
 
-async function updateLastId(member, result) {
-    const params = {
-        TableName: "izone",
-        Key: {
-            "id": member.id,
-        },
-        UpdateExpression: "set lastId = :id",
-        ExpressionAttributeValues: {
-            ":id": result.id,
-        },
-        ReturnValues: "UPDATED_NEW"
-    };
-    if (result.id > member.lastId) {
-        return await docClient.update(params).promise();
-    }
-}
-
 async function sendNotification(member, blog, token) {
     console.log(member, blog, token)
 
@@ -66,7 +49,7 @@ exports.handler = async function () {
         const blogs = await searchContains(member.uid, member.containerId, member.lastId, member.keyword);
         blogs.forEach(async blog => {
             await Promise.all(users.map(user => sendNotification(member, blog, user.access_token)));
-            await updateLastId(member, blog);
+            await izone.updateLastId(member, blog);
         })
     }
     return 'Success';

@@ -11,6 +11,24 @@ const getMembers = async function () {
     return data.Items;
 }
 
+const updateLastId = async function (member, result) {
+    const params = {
+        TableName: "izone",
+        Key: {
+            "id": member.id,
+        },
+        UpdateExpression: "set lastId = :id",
+        ExpressionAttributeValues: {
+            ":id": result.id,
+        },
+        ReturnValues: "UPDATED_NEW"
+    };
+    if (result.id > member.lastId) {
+        return await docClient.update(params).promise();
+    }
+}
+
 module.exports = {
-    members: getMembers
+    members: getMembers,
+    updateLastId: updateLastId,
 }
