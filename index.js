@@ -2,6 +2,7 @@ const got = require('got');
 const AWS = require("aws-sdk");
 const FormData = require('form-data');
 const user = require('./repositories/user');
+const izone = require('./repositories/izone');
 
 AWS.config.update({
     region: "ap-northeast-1",
@@ -56,14 +57,10 @@ async function sendNotification(member, blog, token) {
     await got(url, {headers: headers, body: form});
 }
 
-async function getIzoneMembers() {
-    const data = await docClient.scan({TableName: "izone"}).promise();
-    return data.Items;
-}
 
 exports.handler = async function () {
     const users = await user.all();
-    const members = await getIzoneMembers();
+    const members = await izone.members();
     for (let i in members) {
         let member = members[i];
         const blogs = await searchContains(member.uid, member.containerId, member.lastId, member.keyword);
