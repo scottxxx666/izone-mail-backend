@@ -13,7 +13,7 @@ async function searchContains(uid, containerId, lastId, keyword) {
     try {
         const r = await got(url, {json: true});
         console.log(r.body);
-        return r.body.data.cards.filter((item) => item.mblog && !item.mblog.isTop && item.mblog.id >= lastId && item.mblog.text.toLowerCase().includes(keyword))
+        return r.body.data.cards.filter((item) => item.mblog && !item.mblog.isTop && item.mblog.id > lastId && item.mblog.text.toLowerCase().includes(keyword))
             .map((item) => ({
                 id: item.mblog.id,
                 user: item.mblog.user.screen_name,
