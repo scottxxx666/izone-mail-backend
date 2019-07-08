@@ -44,13 +44,12 @@ async function sendNotification(member, blog, token) {
 exports.handler = async function () {
     const users = await user.all();
     const members = await izone.members();
-    for (let i in members) {
-        let member = members[i];
+    await Promise.all(members.map(async member => {
         const blogs = await searchContains(member.uid, member.containerId, member.lastId, member.keyword);
-        blogs.forEach(async blog => {
+        await Promise.all(blogs.map(async blog => {
             await Promise.all(users.map(user => sendNotification(member, blog, user.access_token)));
             await izone.updateLastId(member, blog);
-        })
-    }
+        }));
+    }));
     return 'Success';
 };
