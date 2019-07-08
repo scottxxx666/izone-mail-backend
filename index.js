@@ -30,8 +30,9 @@ exports.handler = async function () {
         const blogs = await izone.getBlogContains(member.uid, member.containerId, member.lastId, member.keyword);
         await Promise.all(blogs.map(async blog => {
             await Promise.all(users.map(user => sendNotification(member, blog, user.access_token)));
-            await izone.updateLastId(member, blog);
         }));
+        const lastId = Math.max(...blogs.map(blog => blog.id));
+        await izone.updateLastId(member, lastId);
     }));
     return 'Success';
 };

@@ -12,7 +12,7 @@ const getMembers = async function () {
     return data.Items;
 }
 
-const updateLastId = async function (member, result) {
+const updateLastId = async function (member, lastId) {
     const params = {
         TableName: "izone",
         Key: {
@@ -20,11 +20,11 @@ const updateLastId = async function (member, result) {
         },
         UpdateExpression: "set lastId = :id",
         ExpressionAttributeValues: {
-            ":id": result.id,
+            ":id": lastId,
         },
         ReturnValues: "UPDATED_NEW"
     };
-    if (result.id > member.lastId) {
+    if (lastId !== -Infinity) {
         return await docClient.update(params).promise();
     }
 }
