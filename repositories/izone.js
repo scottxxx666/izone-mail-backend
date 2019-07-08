@@ -29,11 +29,15 @@ const updateLastId = async function (member, lastId) {
     }
 }
 
+const getNewBlogs = async function (member) {
+    return await getBlogContains(member.uid, member.containerId, member.lastId, member.keyword);
+}
+
 const getBlogContains = async function (uid, containerId, lastId, keyword) {
     const url = `https://m.weibo.cn/api/container/getIndex?containerid=${containerId}`;
     try {
         const r = await got(url, {json: true});
-        return r.body.data.cards.filter((item) => item.mblog && !item.mblog.isTop && item.mblog.id >= lastId && item.mblog.text.toLowerCase().includes(keyword))
+        return r.body.data.cards.filter((item) => item.mblog && !item.mblog.isTop && item.mblog.id > lastId && item.mblog.text.toLowerCase().includes(keyword))
             .map((item) => ({
                 id: item.mblog.id,
                 user: item.mblog.user.screen_name,
@@ -49,5 +53,5 @@ const getBlogContains = async function (uid, containerId, lastId, keyword) {
 module.exports = {
     members: getMembers,
     updateLastId: updateLastId,
-    getBlogContains: getBlogContains,
+    getNewBlogs: getNewBlogs,
 }

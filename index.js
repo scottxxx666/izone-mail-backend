@@ -22,17 +22,24 @@ async function sendNotification(member, blog, token) {
     await got(url, {headers: headers, body: form});
 }
 
+async function notifyUsers(blogs, member) {
+    const users = await user.all();
+    await Promise.all(blogs.map(async blog => {
+        await Promise.all(users.map(user => sendNotification(member, blog, user.access_token)));
+    }));
+}
+
+async function updateLastId(blogs, member) {
+    const lastId = Math.max(...blogs.map(blog => blog.id));
+    await izone.updateLastId(member, lastId);
+}
 
 exports.handler = async function () {
-    const users = await user.all();
     const members = await izone.members();
     await Promise.all(members.map(async member => {
-        const blogs = await izone.getBlogContains(member.uid, member.containerId, member.lastId, member.keyword);
-        await Promise.all(blogs.map(async blog => {
-            await Promise.all(users.map(user => sendNotification(member, blog, user.access_token)));
-        }));
-        const lastId = Math.max(...blogs.map(blog => blog.id));
-        await izone.updateLastId(member, lastId);
+        const blogs = await izone.getNewBlogs(member);
+        await notifyUsers(blogs, member);
+        await updateLastId(blogs, member);
     }));
     return 'Success';
 };
