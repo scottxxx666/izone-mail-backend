@@ -1,4 +1,5 @@
 const mockPromise = jest.fn();
+const AWS = require("aws-sdk");
 
 jest.doMock('aws-sdk', () => {
     return {
@@ -9,7 +10,6 @@ jest.doMock('aws-sdk', () => {
     }
 });
 
-const AWS = require("aws-sdk");
 const izone = require('../repositories/izone');
 
 beforeEach(() => {
