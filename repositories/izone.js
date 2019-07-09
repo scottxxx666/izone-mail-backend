@@ -43,7 +43,8 @@ const getBlogContains = async function (uid, containerId, lastId, keyword) {
                 user: item.mblog.user.screen_name,
                 pubDate: item.mblog.created_at,
                 link: `https://weibo.com/${uid}/${item.mblog.bid}`,
-            }));
+            }))
+            .sort((a, b) => a.id - b.id);
     } catch (error) {
         console.error(error);
         return [];
