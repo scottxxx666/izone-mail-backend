@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,7 @@
   "dependencies": {
     "aws-sdk": "^2.479.0",
     "form-data": "^2.4.0",
-    "got": "^9.6.0"
+    "got": "^9.6.0",
+    "jest": "^24.8.0"
   }
 }
