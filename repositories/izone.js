@@ -1,14 +1,8 @@
-const AWS = require("aws-sdk");
 const got = require('got');
-
-AWS.config.update({
-    region: "ap-northeast-1",
-});
-
-const docClient = new AWS.DynamoDB.DocumentClient();
+const dynamo = require("./dynamoDB");
 
 const getMembers = async function () {
-    const data = await docClient.scan({TableName: "izone"}).promise();
+    const data = await dynamo.scan({TableName: "izone"}).promise();
     return data.Items;
 }
 
@@ -25,7 +19,7 @@ const updateLastId = async function (member, lastId) {
         ReturnValues: "UPDATED_NEW"
     };
     if (lastId !== -Infinity) {
-        return await docClient.update(params).promise();
+        return await dynamo.update(params).promise();
     }
 }
 

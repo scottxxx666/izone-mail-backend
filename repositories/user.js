@@ -1,13 +1,7 @@
-const AWS = require("aws-sdk");
-
-AWS.config.update({
-    region: "ap-northeast-1",
-});
-
-const docClient = new AWS.DynamoDB.DocumentClient();
+const dynamo = require("./dynamoDB");
 
 const getAll = async function () {
-    const data = await docClient.scan({TableName: "line_auth"}).promise();
+    const data = await dynamo.scan({TableName: "line_auth"}).promise();
     return data.Items;
 }
 
