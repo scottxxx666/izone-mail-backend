@@ -1,7 +1,7 @@
 const got = require('got');
 const FormData = require('form-data');
 
-const sendNotification = async function (member, blog, token) {
+const sendNotification = async function sendNotificationToSubscriber(member, blog, token) {
   console.log(member, blog, token);
 
   const form = new FormData();
