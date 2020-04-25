@@ -1,16 +1,21 @@
-const got = require('got');
-const FormData = require('form-data');
+const AWS = require("aws-sdk");
+const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 
-const sendNotification = async function sendNotificationToSubscriber(member, blog, token) {
+const sendNotification = function sendNotificationToSubscriber(member, blog, token) {
   console.log(member, blog, token);
 
-  const form = new FormData();
-  form.append('message', `${member.name} 發了封新 mail 唷！\n${blog.link}`);
-
-  const url = 'https://notify-api.line.me/api/notify';
-  const headers = { Authorization: `Bearer ${token}` };
-
-  await got(url, { headers, body: form });
+  const params = {
+    MessageAttributes: {
+      "OpenId": {
+        DataType: "String",
+        StringValue: token,
+      }
+    },
+    MessageBody: `${member.name} 發了封新 mail 唷！\n${blog.link}`,
+    QueueUrl: process.env.QUEUE_URL,
+  };
+  return sqs.sendMessage(params)
+    .promise();
 };
 
 module.exports = {
