@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.479.0",
+    "aws-sdk": "^2.814.0",
     "form-data": "^2.4.0",
     "got": "^9.6.0",
     "jest": "^24.8.0"
